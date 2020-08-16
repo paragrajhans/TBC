@@ -1,0 +1,61 @@
+{
+  "name": "fe-code-challenge",
+  "version": "0.0.1",
+  "description": "starter project for front-end code challenge",
+  "main": "index.jsx",
+  "scripts": {
+    "watch": "./node_modules/.bin/webpack -d --watch",
+    "dev": "./node_modules/.bin/webpack-dev-server -d --hot --inline --progress --colors",
+    "api": "json-server --watch api/db.js --port 8081 --routes api/routes.json",
+    "dev:api": "npm run api & npm run dev",
+    "build": "NODE_ENV=production ./node_modules/.bin/webpack -p",
+    "test": "yarn jest && yarn lint",
+    "test:watch": "yarn jest:watch & yarn lint:watch",
+    "jest": "./node_modules/.bin/jest",
+    "jest:watch": "./node_modules/.bin/jest --watch",
+    "lint": "./node_modules/.bin/eslint src/js test --ext .js --ext .jsx",
+    "lint:watch": "./node_modules/.bin/esw src/js test --ext .js --ext .jsx -w --color --clear",
+    "lint:fix": "./node_modules/.bin/eslint src/js test --ext .js --ext .jsx --fix"
+  },
+  "author": "Betsy Rubie <betsy@thebouqs.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/plugin-proposal-throw-expressions": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "bootstrap": "^4.5.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.0",
+    "autoprefixer": "^9.8.6",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^4.2.0",
+    "eslint": "^7.5.0",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-watch": "^7.0.0",
+    "faker": "^4.1.0",
+    "file-loader": "^6.0.0",
+    "jest": "^26.2.2",
+    "json-server": "^0.16.1",
+    "node-sass": "^4.14.1",
+    "postcss-loader": "^3.0.0",
+    "precss": "^4.0.0",
+    "sass-loader": "^9.0.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.0.9"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": "https://github.com/thebouqs/fe-code-challenge"
+}
