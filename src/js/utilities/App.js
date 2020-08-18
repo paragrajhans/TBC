@@ -6,7 +6,7 @@ import { Switch } from "react-router";
 class App extends React.Component {
   render() {
     return (
-      <BrowserRouter basename="/shopping-cart">
+      <BrowserRouter basename="/">
         <div>
           <div>
             <Switch>
