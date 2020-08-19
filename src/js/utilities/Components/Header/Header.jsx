@@ -1,5 +1,6 @@
 import React from "react";
 import "./Header.scss";
+import { BagIcon, FlowerIcon } from "../../../../style/icons";
 
 class Header extends React.Component {
   constructor(props) {
@@ -8,52 +9,23 @@ class Header extends React.Component {
   }
 
   render() {
-    const { onClickHome, onClickCart } = this.props;
+    const { navigateToCart } = this.props;
     return (
       <header>
-        {this.props.scrollEvent ? (
-          <div className="scroll-header-container justify-content-center">
-            <div
-              className="home"
-              onClick={() => {
-                onClickHome();
-              }}
-            >
-              The Bouqs Company
-            </div>
-            <div className="cart">
-              <i
-                className="fas fa-shopping-cart"
-                style={{ fontSize: "20px" }}
-                onClick={() => {
-                  onClickCart();
-                }}
-              ></i>
-              <span class="material-icons">shopping_cart</span>
-            </div>
+        <div className="row no-gutters">
+          <div className="col-sm-11 text-left" style={{ cursor: "pointer" }}>
+            <h4>The Bouqs Company</h4>
           </div>
-        ) : (
-          <div className="header-container justify-content-center">
-            <div
-              className="home"
-              onClick={() => {
-                onClickHome();
-              }}
-            >
-              The Bouqs Company
-            </div>
-
-            <div className="cart">
-              <i
-                className="fas fa-shopping-cart"
-                style={{ fontSize: "20px" }}
-                onClick={() => {
-                  onClickCart();
-                }}
-              ></i>
-            </div>
+          <div
+            className="col-sm-1 text-right"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigateToCart();
+            }}
+          >
+            <BagIcon width={"30px"} height={"30px"} />
           </div>
-        )}
+        </div>
       </header>
     );
   }

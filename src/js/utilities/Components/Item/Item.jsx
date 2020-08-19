@@ -19,11 +19,17 @@ class Item extends React.Component {
   }
 
   render() {
-    const { addToCart, showDetails } = this.props;
+    const { showDetails } = this.props;
 
     return (
       <Fragment>
-        <div key={this.state.lowestVariant.id} className="item">
+        <div
+          key={this.state.lowestVariant.id}
+          className="item"
+          onClick={() => {
+            showDetails(this.state.lowestVariant, this.props.leg);
+          }}
+        >
           <div className="item-image">
             <img src={this.props.leg.images[0].url} />
           </div>
@@ -32,13 +38,21 @@ class Item extends React.Component {
           </h5>
           <p className="item-price">
             {this.state.lowestVariant.prices &&
-              "$" + this.state.lowestVariant.prices.regular}
-            -
-            {this.state.lowestVariant.prices &&
-              this.state.lowestVariant.prices.sale &&
-              "$" + this.state.lowestVariant.prices.sale}
+              (this.state.lowestVariant.prices.sale ? (
+                <>
+                  <del className="text-danger">
+                    {"$" + Math.ceil(this.state.lowestVariant.prices.regular)}
+                  </del>{" "}
+                  <span className="text-success">
+                    {"$" + Math.ceil(this.state.lowestVariant.prices.sale)}
+                  </span>
+                </>
+              ) : (
+                <span className="text-primary">
+                  {"$" + this.state.lowestVariant.prices.regular}
+                </span>
+              ))}
           </p>
-          <p className="item-price"></p>
         </div>
       </Fragment>
     );

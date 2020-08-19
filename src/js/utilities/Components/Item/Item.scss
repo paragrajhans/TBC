@@ -18,42 +18,7 @@
       }
     }
   }
-  .item-name {
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 8px;
-    min-height: 100px;
-  }
-  .item-brand {
-    margin-top: 8px;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 20px;
-    margin-bottom: 8px;
-  }
-  .item-price {
-    font-size: 22px;
-    font-weight: 700;
-    line-height: 22px;
-    margin-bottom: 16px;
-  }
-  .item-name,
-  .item-price {
-    color: black;
-    padding: 0 16px;
-    text-align: center;
-  }
-  .item-action {
-    padding: 16px;
-    button {
-      width: 100%;
-      transition: all 300ms ease-in;
-      &.added {
-        background: orange;
-      }
-    }
-  }
+
   &:hover {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   }

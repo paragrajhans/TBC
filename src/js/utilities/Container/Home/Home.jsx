@@ -13,6 +13,7 @@ class Home extends React.Component {
     this.state = {
       url: "http://localhost:8081/api/categories",
       constData: [],
+      cart: [],
       data: [],
       categories: [],
       openDialog: false,
@@ -42,6 +43,14 @@ class Home extends React.Component {
       .catch((error) => {
         console.log("hello world");
       });
+
+    if (this.props.location.cart) {
+      if (this.props.location.cart.length > 0) {
+        this.setState({
+          cart: this.props.location.cart,
+        });
+      }
+    }
   }
 
   setCategories(dataItem) {
@@ -67,15 +76,14 @@ class Home extends React.Component {
     });
   };
 
-  showDetails = (dataItem, price, name) => {
+  showDetails = (dataItem, leg) => {
     console.log(dataItem);
-    console.log(price);
+    console.log(leg);
     this.setState({
       ...this.state,
       selectedItem: dataItem,
-      variantPrice: price,
+      selectedLeg: leg,
       openDialog: true,
-      variantName: name,
     });
   };
 
@@ -85,39 +93,77 @@ class Home extends React.Component {
     });
   };
 
-  navigatetoCart = (dataItem) => {
+  getItemIndexInCart = (dataItem) => {
+    let items = this.state.cart;
+    for (let idx = 0; idx < items.length; idx++) {
+      if (items[idx].id === dataItem.id) {
+        return idx;
+      } else {
+        continue;
+      }
+    }
+    return -1;
+  };
+
+  addToCart = () => {
+    let updatedCart = this.state.cart;
+    let itemIndexInCart = this.getItemIndexInCart(this.state.selectedItem);
+    console.log(itemIndexInCart);
+
+    if (itemIndexInCart !== -1) {
+      updatedCart[itemIndexInCart].quantity += 1;
+    } else {
+      console.log("something matched 2");
+      let itemCopy = JSON.parse(JSON.stringify(this.state.selectedItem));
+      itemCopy.quantity = 1;
+      itemCopy.product_name = this.state.selectedLeg.name;
+      itemCopy.product_description = this.state.selectedLeg.description;
+      itemCopy.image_url = this.state.selectedLeg.images[0].url;
+
+      updatedCart.push(itemCopy);
+    }
+
     this.setState(
       {
+        cart: updatedCart,
         redirect: true,
       },
       () => {
         if (this.state.redirect) {
           return this.props.history.push({
             pathname: "/cart",
-            item: this.state.selectedItem,
-            price: this.state.variantPrice,
-            nane: this.state.variantName,
+            cart: this.state.cart,
+            totalPrice: this.state.totalPrice,
           });
         }
       }
     );
   };
 
+  navigateToCart = () => {
+    return this.props.history.push({
+      pathname: "/cart",
+      cart: this.state.cart,
+      totalPrice: this.state.totalPrice,
+    });
+  };
+
   render() {
     return (
       <div className="content-wrapper">
+        {this.state.itemAdded && <div className="item-added">Item Added</div>}
         {this.state.openDialog && (
           <Dialog
             title={"Product Details"}
             onClose={this.toggleDialog}
             width="60%"
-            height="49%"
+            height="42%"
           >
-            <div className="card mb-3">
+            <div className="card">
               <div className="row no-gutters">
-                <div className="col-md-2" style={{ marginTop: "3%" }}>
+                <div className="col-md-2 align-self-center">
                   <img
-                    src={this.state.selectedItem.images[0].url}
+                    src={this.state.selectedLeg.images[0].url}
                     className="card-img"
                     alt="..."
                   />
@@ -125,22 +171,33 @@ class Home extends React.Component {
                 <div className="col-md-8">
                   <div className="card-body">
                     <h5 className="card-title">
+                      {this.state.selectedLeg.name} -{" "}
                       {this.state.selectedItem.name}
                     </h5>
                     <p className="card-text">
-                      {this.state.selectedItem.short_description}
+                      {this.state.selectedLeg.description}
                     </p>
                     <p className="card-text">
-                      {/* <a href={this.state.tempItem.productUrl} target="_blank">
-                        Navigate to Product
-                      </a> */}
-                    </p>
-
-                    <p className="card-text">
-                      <small className="text-muted">
-                        {"$"}
-                        {this.state.variantPrice}
-                      </small>
+                      {this.state.selectedItem.prices &&
+                        (this.state.selectedItem.prices.sale ? (
+                          <>
+                            <del className="text-danger">
+                              {"$" +
+                                Math.ceil(
+                                  this.state.selectedItem.prices.regular
+                                )}
+                            </del>{" "}
+                            <span className="text-success">
+                              {"$" +
+                                Math.ceil(this.state.selectedItem.prices.sale)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-primary">
+                            {"$" +
+                              Math.ceil(this.state.selectedItem.prices.regular)}
+                          </span>
+                        ))}
                     </p>
                   </div>
                 </div>
@@ -148,62 +205,50 @@ class Home extends React.Component {
             </div>
 
             <DialogActionsBar>
-              <button
-                className="btn btn-success"
-                onClick={() => {
-                  this.navigatetoCart();
-                }}
-              >
-                Add to Cart
-              </button>
+              <div className="m-3">
+                <button
+                  className="btn btn-success"
+                  onClick={() => {
+                    this.addToCart();
+                  }}
+                >
+                  Add to Cart
+                </button>
+              </div>
             </DialogActionsBar>
           </Dialog>
         )}
         <Header
           onClickHome={this.onClickHome}
-          scrollEvent={this.state.scroll}
-          onClickCart={this.onClickCart}
+          navigateToCart={this.navigateToCart}
         />
-        <div
-          className="row justify-content-center"
-          style={{ marginTop: "100px" }}
-        >
-          <p style={{ marginRight: "5px", fontSize: "18px" }}>Sort By :</p>
-          <DropDownList
-            className="sort-by"
-            data={this.state.categories}
-            onChange={this.onChange}
-            style={{
-              border: "1px solid gray",
-              borderRadius: "4px",
-            }}
-          />
+        <div className="row no-gutters" style={{ marginTop: "100px" }}>
+          <h6 className="col-sm-12 pr-4 text-right">
+            Sort By :{" "}
+            <DropDownList
+              className="sort-by"
+              data={this.state.categories}
+              onChange={this.onChange}
+              style={{
+                border: "1px solid gray",
+                borderRadius: "4px",
+              }}
+            />
+          </h6>
         </div>
-        <div className="item-wrapper">
+        <div className="item-wrapper p-2">
           {this.state.data.map((value) => {
             return value.products.map((product) => {
               return (
                 <Item
                   key={product.id}
                   leg={product}
-                  // addToCart={this.addToCart}
-                  // showDetails={this.showDetails}
+                  showDetails={this.showDetails}
                   // changeQty={this.changeQty}
                 />
               );
             });
           })}
-          {/* {this.state.data.map((value) => {
-            return (
-              <Item
-                key={value.id}
-                leg={value}
-                // addToCart={this.addToCart}
-                showDetails={this.showDetails}
-                // changeQty={this.changeQty}
-              />
-            );
-          })} */}
         </div>
       </div>
     );
