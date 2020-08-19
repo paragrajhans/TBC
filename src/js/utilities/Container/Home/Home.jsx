@@ -1,11 +1,10 @@
-import React, { Fragment } from "react";
+import React from "react";
 import axios from "axios";
 import "./Home.scss";
 import Header from "../../Components/Header/Header";
 import Item from "../../Components/Item/Item";
 import { Dialog, DialogActionsBar } from "@progress/kendo-react-dialogs";
 import { DropDownList } from "@progress/kendo-react-dropdowns";
-import { data } from "autoprefixer";
 
 class Home extends React.Component {
   constructor(props) {
@@ -29,7 +28,6 @@ class Home extends React.Component {
         },
       })
       .then((response) => {
-        console.log(response);
         this.setState(
           {
             data: response.data,
@@ -77,8 +75,6 @@ class Home extends React.Component {
   };
 
   showDetails = (dataItem, leg) => {
-    console.log(dataItem);
-    console.log(leg);
     this.setState({
       ...this.state,
       selectedItem: dataItem,
@@ -108,12 +104,10 @@ class Home extends React.Component {
   addToCart = () => {
     let updatedCart = this.state.cart;
     let itemIndexInCart = this.getItemIndexInCart(this.state.selectedItem);
-    console.log(itemIndexInCart);
 
     if (itemIndexInCart !== -1) {
       updatedCart[itemIndexInCart].quantity += 1;
     } else {
-      console.log("something matched 2");
       let itemCopy = JSON.parse(JSON.stringify(this.state.selectedItem));
       itemCopy.quantity = 1;
       itemCopy.product_name = this.state.selectedLeg.name;
@@ -154,10 +148,15 @@ class Home extends React.Component {
         {this.state.itemAdded && <div className="item-added">Item Added</div>}
         {this.state.openDialog && (
           <Dialog
-            title={"Product Details"}
+            title={
+              <>
+                {this.state.selectedLeg.name} - {this.state.selectedItem.name}
+              </>
+            }
             onClose={this.toggleDialog}
-            width="60%"
-            height="42%"
+            className="dialogHeader"
+            width={860}
+            height={340}
           >
             <div className="card">
               <div className="row no-gutters">
@@ -171,8 +170,14 @@ class Home extends React.Component {
                 <div className="col-md-8">
                   <div className="card-body">
                     <h5 className="card-title">
-                      {this.state.selectedLeg.name} -{" "}
-                      {this.state.selectedItem.name}
+                      {this.state.selectedLeg.manufacturer &&
+                        "Mfd by" +
+                          " " +
+                          this.state.selectedLeg.manufacturer.name +
+                          " " +
+                          "at" +
+                          " " +
+                          this.state.selectedLeg.manufacturer.location}
                     </h5>
                     <p className="card-text">
                       {this.state.selectedLeg.description}
