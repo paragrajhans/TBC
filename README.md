@@ -7,7 +7,7 @@ npm i
 npm run dev:api
 ```
 
-- Url for browser : http://localhost:8080
+- URL for browser : http://localhost:8080
 
 - Mock API - http://localhost:8081/api/categories
 
