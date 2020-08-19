@@ -7,11 +7,9 @@ npm i
 npm run dev:api
 ```
 
-- url for browser : http://localhost:8080
+- Url for browser : http://localhost:8080
 
 - Mock API - http://localhost:8081/api/categories
-
-* Mock API - http://localhost:8081/api/categories
 
 ## Requirements:
 
